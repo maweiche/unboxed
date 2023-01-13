@@ -11,8 +11,11 @@ _By the end of this lesson, you will be able to:_
 
 # TL;DR
 <!-- Can we ELI5 here and put it in "non-dev" speak? -->
+<!-- Adjusted spacing between -->
 -   **Solana Pay** in order for a transaction on the Solana Network to take place, it requires a certain structure to ensure things like security and speed. This tool helps us build and submit the transactions with the required structure.
+    
 -   **Partial signing** of transactions allows for the creation of transactions that require multiple signatures before they are submitted to the network. Think of this as signing a check and letting your friend fill out the rest before they sign the back and deposit it in their account.
+    
 -   **Transaction gating** involves implementing rules that determine whether certain transactions are allowed to be processed or not, based on certain conditions or the presence of specific data in the transaction.
 
 # Overview
@@ -25,9 +28,13 @@ In the end, you will have completed the build for a Scavenger Hunt App that requ
 
 We will be providing boiler-plate code to get started, but some previous Javascript and React experience is always useful! We will also be using some Rust, but no worries if you unfamiliar, we provide plenty of comments to help you understand.
 
-You will need to install `ngrok`, which you can set up [here](https://ngrok.com/) or if on a Mac use the [Homebrew](https://formulae.brew.sh/cask/ngrok) command `brew install --cask ngrok` .
+You will need to install `ngrok`, which you can set up [here](https://ngrok.com/).
 
-And also have a mobile device ready with Solflare available to test our Front-End. This demo works best with Solflare (Phantom wallet will display a warning message when scanning a Solana Pay QR code).
+Or, if on a Mac use [Homebrew](https://formulae.brew.sh/cask/ngrok) 
+
+`brew install --cask ngrok` 
+
+Also, have a mobile device ready with Solflare available to test our Front-End. This demo works best with Solflare (Phantom wallet will display a warning message when scanning a Solana Pay QR code).
 
 ## Solana Pay
 
@@ -89,7 +96,17 @@ type PostError = {
 
 ### Define API endpoint
 
-Next, you need to create a function that can handle requests made by a wallet. This function has two parameters: a request object and a response object. The request object includes information about the request made by the wallet, such as the type of request (GET or POST) and any data included in the request (for POST requests). The response object is used to send a response back to the wallet.
+Next, you need to create a function that can handle requests made by a wallet. 
+
+This function has two parameters:
+
+•**request object**
+
+•**response object** 
+
+The **request object** includes information about the request made by the wallet, such as the type of request (GET or POST) and any data included in the request (for POST requests). 
+
+The **response object** is used to send a response back to the wallet.
 
 Here is an example of how the API endpoint function could be defined:
 
@@ -169,7 +186,7 @@ async function post(
 }
 ```
 
-When the wallet makes a POST request to the API endpoint, this function checks that the request body contains an `account` field and the request query contains a `reference` field. If either of these fields is missing, it sends an error response. If both fields are present, it calls the `buildTransaction` helper function with the `account` and `reference` as arguments.
+When the wallet makes a POST request to the API endpoint, this function checks that the request body contains an `account` field and the request query contains a `reference` field. **If either of these fields is missing**, it sends an error response. If both fields are present, it calls the `buildTransaction` helper function with the `account` and `reference` as arguments.
 
 For each transaction, a unique `reference` is generated and added to the transaction. This `reference` is a public key used to confirm the transaction after it has been sent by the user. Since the transaction request is built in advance and sent later by a wallet, the application does not receive a transaction signature to confirm that it has been sent. To determine if a transaction has been sent and confirmed by the network, the application checks for the presence of a transaction with the added `reference`.
 
@@ -413,7 +430,9 @@ To get started, download the starter code on the `master` branch of this [re
 The scavenger hunt program has two instructions: `initialize` and `check_in`. The `initialize` instruction is used to set up the user's state, while the `check_in` instruction is used to record a check-in at a location in the scavenger hunt. The `EVENT_ORGANIZER` is a public key that is hardcoded as a constant and is required as an additional signer for the `check-in` instruction. The keypair for this account can be found in the `.env.example` file in the frontend for demonstration purposes.
 
 <!-- How could someone verify this on the blockchain? How could I see my last "checked-in" location? -->
-[Check Out the Program Here](https://explorer.solana.com/address/9gQfxMKfELeAjLmAoriLpkVPSHd7xb36cBfYXDXX27xE?cluster=devnet)
+You can actually [check Out the Program Here.](https://explorer.solana.com/address/9gQfxMKfELeAjLmAoriLpkVPSHd7xb36cBfYXDXX27xE?cluster=devnet) If you click a transaction and scroll all the way to the bottom you see "Checked In" logged on the program!
+
+![Program on Chain](programOnChain.png)
 
 ```rust
 use anchor_lang::{prelude::*, solana_program::pubkey};
@@ -517,7 +536,7 @@ https://7761-24-28-107-82.ngrok.io
 This will allow you to use Solana Pay while testing locally.
 
 <!-- Should we relocate this Solflare download to beginning of demo to not break flow of build? -->
-On your mobile device, download the Solflare wallet if you haven't already. This demo works best with Solflare (Phantom wallet will display a warning message when scanning a Solana Pay QR code). Once Solflare is set up, switch to devnet in the wallet and scan the QR code on the home page labeled “SOL Transfer”. This QR code is a reference implementation for a transaction request that performs a simple SOL transfer and also calls the `requestAirdrop` function to fund the mobile wallet with devnet SOL.
+On your mobile device, download the Solflare wallet if you haven't already. Once Solflare is set up, switch to devnet in the wallet and scan the QR code on the home page labeled “SOL Transfer”. This QR code is a reference implementation for a transaction request that performs a simple SOL transfer and also calls the `requestAirdrop` function to fund the mobile wallet with devnet SOL.
 
 ### 3. Location check-in API
 
@@ -771,8 +790,8 @@ async function fetchOrInitializeUserState(
 ### 8. Implement `verifyCorrectLocation` function
 
 Next, let’s implement the `verifyCorrectLocation` helper function. This function is used to verify that a user is at the correct location in a scavenger hunt game.
-<!-- A little wordy, can we clean? -->
-It takes in a user’s state for the game and the current location, and returns either an error message or undefined. If the user state is undefined, it checks if the current location is the first location in the game. If it is not, it returns an error message. If the user state is defined, it retrieves the last location recorded in the user state and compares it to the current location. If the current location is not immediately following the last location, it returns an error message. If all checks pass, it returns undefined which allows the transaction to continue being built.
+<!-- Here is how chatGPT made this a little more concise lol-->
+What the program does here is checks if user's game state and current location are valid, returns error or undefined. If the user state is undefined and the location is not the first, returns error. If user state is defined, compares current location with last recorded location, returns error if not immediately following, otherwise returns undefined to continue the transaction.
 
 ```jsx
 // Verify that the user is at the correct location
@@ -822,6 +841,8 @@ function verifyCorrectLocation(
 ### 9. Scan QR Code
 <!-- Provide sample images of what to see if executed correctly -->
 To test the demo for creating a scavenger hunt using Solana Pay, use your Solflare wallet to scan the QR code on the 'location 1' page. Make sure the frontend is running and open from the ngrok URL. After scanning the QR code, you should see a message indicating that you are at location 1.
+
+![Location 1](scavengerHunt.png)
 
 Next, scan the QR code on the 'location 2' page. You may need to wait a few seconds for the previous transaction to finalize before continuing. Congratulations, you have successfully finished the scavenger hunt demo using Solana Pay!
 
